@@ -1,33 +1,62 @@
 using System;
-namespace Task3
+
+namespace Task3.Unique
 {
-   class Program
-   {
+    class Program
+    {
+        // Метод, который нужно было реализовать
+        public static int[] GetUnique(int[] source)
+        {
+            // Создаем временный массив для результата.
+            // Он не может быть длиннее исходного.
+            int[] tempResult = new int[source.Length];
+            int uniqueCount = 0; // Счетчик уникальных элементов
 
-    static bool IsExists(int[] a, int b)
-    {      
-      foreach(int el in a)
-        if (el==b) return true;
-      return false;
+            // Перебираем все элементы исходного массива
+            for (int i = 0; i < source.Length; i++)
+            {
+                bool isDuplicate = false;
+
+                // Проверяем, встречался ли этот элемент ранее в tempResult
+                for (int j = 0; j < uniqueCount; j++)
+                {
+                    if (source[i] == tempResult[j])
+                    {
+                        isDuplicate = true;
+                        break; // Нашли дубликат, дальше искать нет смысла
+                    }
+                }
+
+                // Если элемент не дубликат — добавляем его в результат
+                if (!isDuplicate)
+                {
+                    tempResult[uniqueCount] = source[i];
+                    uniqueCount++;
+                }
+            }
+
+            // Теперь нужно создать массив точного размера (uniqueCount)
+            // и скопировать туда наши уникальные элементы
+            int[] result = new int[uniqueCount];
+            for (int i = 0; i < uniqueCount; i++)
+            {
+                result[i] = tempResult[i];
+            }
+
+            return result;
+        }
+
+        static void Main(string[] args)
+        {
+            // Тестовый массив из примера
+            int[] source = { 1, 2, 2, 3, 4, 4, 4, 5 };
+
+            Console.WriteLine($"Исходный: {string.Join(", ", source)}");
+
+            // Вызываем наш метод
+            int[] unique = GetUnique(source);
+
+            Console.WriteLine($"Уникальные: {string.Join(", ", unique)}");
+        }
     }
-
-     static void Main()
-     {
-        int[] arr=new int[10];
-        Random random=new Random();
-        for(int i=0;i<arr.Length;i++)
-          arr[i]=random.Next(1,6);
-        System.Console.WriteLine(string.Join(", ", arr)); 
-        int j=0;       
-        int[] t=new int[0];
-        foreach(int el in arr)
-          if (!IsExists(t, el))
-          {
-            Array.Resize(ref t,j+1);//Вот так не хорошо!
-            t[j]=el;
-            j++;
-          }
-           System.Console.WriteLine(string.Join(", ", t));
-     }
-   }
 }
